@@ -1,0 +1,151 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GuildGame.Views.MainWindow"
+        Width="1100" Height="700"
+        Title="Guilde de Héros">
+
+  <DockPanel Margin="12">
+
+    <!-- Bandeau ressources / temps -->
+    <Border DockPanel.Dock="Top" Padding="10" CornerRadius="10">
+      <StackPanel Orientation="Horizontal" Spacing="18">
+        <TextBlock Text="{Binding Jour, StringFormat=Jour: {0}}" />
+        <TextBlock Text="{Binding Phase, StringFormat=Phase: {0}}" />
+        <TextBlock Text="{Binding Or, StringFormat=Or: {0}}" />
+        <TextBlock Text="{Binding Nourriture, StringFormat=Nourriture: {0}}" />
+        <TextBlock Text="{Binding Soins, StringFormat=Soins: {0}}" />
+        <TextBlock Text="{Binding WeaponKits, StringFormat=Kits arme: {0}}" />
+        <TextBlock Text="{Binding ArmorKits, StringFormat=Kits armure: {0}}" />
+      </StackPanel>
+    </Border>
+
+    <!-- Boutons -->
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+      <Button Content="Phase suivante" Command="{Binding NextPhaseCommand}" />
+      <Button Content="Assigner mission JOUR (matin)" Command="{Binding AssignDayCommand}" />
+      <Button Content="Assigner mission NUIT (soir)" Command="{Binding AssignNightCommand}" />
+      <Button Content="Gestion (ressources / héros / équipement)" Command="{Binding OpenResourcesCommand}" />
+      <Button Content="Marchand (recrutement / achats / upgrades)" Command="{Binding OpenMerchantCommand}" />
+    </StackPanel>
+
+    <!-- Contenu central : 3 panneaux fixes + scroll -->
+    <Grid ColumnDefinitions="340,420,320"
+          Margin="0,10,0,0"
+          Height="540"
+          VerticalAlignment="Top">
+
+      <!-- Héros -->
+      <Border Grid.Column="0" Padding="10" CornerRadius="10" Margin="0,0,12,0" Height="540">
+        <Grid RowDefinitions="Auto,*">
+          <TextBlock Grid.Row="0"
+                     Text="Héros (cliquer pour sélectionner)"
+                     FontSize="18"
+                     Margin="0,0,0,8"/>
+
+          <ListBox Grid.Row="1"
+                   ItemsSource="{Binding Heros}"
+                   SelectedItem="{Binding SelectedHero}"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <StackPanel>
+                  <TextBlock Text="{Binding Nom}" />
+                  <TextBlock Text="{Binding Classe, StringFormat=Classe: {0}}" FontSize="12"/>
+                  <TextBlock Text="{Binding Niveau, StringFormat=Niveau: {0}}" FontSize="12"/>
+
+                  <TextBlock Text="{Binding Experience, StringFormat=XP: {0}/100}" FontSize="12"/>
+                  <TextBlock Text="{Binding XpAvantNiveauSuivant, StringFormat=Reste: {0} XP}" FontSize="12"/>
+
+                  <TextBlock Text="{Binding Vie, StringFormat=PV: {0}}" FontSize="12"/>
+                  <TextBlock Text="{Binding Fatigue, StringFormat=Fatigue: {0}}" FontSize="12"/>
+                  <TextBlock Text="{Binding WeaponLevel, StringFormat=Arme: {0}}" FontSize="12"/>
+                  <TextBlock Text="{Binding ArmorLevel, StringFormat=Armure: {0}}" FontSize="12"/>
+                  <TextBlock Text="{Binding Statut, StringFormat=Statut: {0}}" FontSize="12"/>
+                </StackPanel>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </Border>
+
+      <!-- Missions -->
+      <Border Grid.Column="1" Padding="10" CornerRadius="10" Margin="0,0,12,0" Height="540">
+        <Grid RowDefinitions="Auto,*">
+          <TextBlock Grid.Row="0" Text="Missions" FontSize="18" Margin="0,0,0,8"/>
+
+          <TabControl Grid.Row="1">
+            <TabItem Header="Jour">
+              <ListBox ItemsSource="{Binding MissionsJour}"
+                       SelectedItem="{Binding SelectedDayMission}"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                       ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel>
+                      <TextBlock Text="{Binding Nom}" />
+                      <TextBlock Text="{Binding Type, StringFormat=Type: {0}}" FontSize="12"/>
+                      <TextBlock Text="{Binding Difficulte, StringFormat=Difficulté: {0}}" FontSize="12"/>
+
+                      <TextBlock Text="{Binding CoutNourriture, StringFormat=Coût nourriture: -{0}}" FontSize="12"/>
+                      <TextBlock Text="{Binding RecompenseNourriture, StringFormat=Récompense nourriture: +{0} (max 1)}" FontSize="12"/>
+                      <TextBlock Text="{Binding RecompenseOr, StringFormat=Récompense or: +{0}}" FontSize="12"/>
+
+                      <TextBlock Text="{Binding Assigne.Nom, StringFormat=Assigné: {0}}" FontSize="12"/>
+                      <TextBlock Text="{Binding PhasesRestantes, StringFormat=Phases restantes: {0}}" FontSize="12"/>
+                    </StackPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </TabItem>
+
+            <TabItem Header="Nuit">
+              <ListBox ItemsSource="{Binding MissionsNuit}"
+                       SelectedItem="{Binding SelectedNightMission}"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                       ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <StackPanel>
+                      <TextBlock Text="{Binding Nom}" />
+                      <TextBlock Text="{Binding Type, StringFormat=Type: {0}}" FontSize="12"/>
+                      <TextBlock Text="{Binding Difficulte, StringFormat=Difficulté: {0}}" FontSize="12"/>
+
+                      <TextBlock Text="{Binding CoutNourriture, StringFormat=Coût nourriture: -{0}}" FontSize="12"/>
+                      <TextBlock Text="{Binding RecompenseNourriture, StringFormat=Récompense nourriture: +{0} (max 1)}" FontSize="12"/>
+                      <TextBlock Text="{Binding RecompenseOr, StringFormat=Récompense or: +{0}}" FontSize="12"/>
+
+                      <TextBlock Text="{Binding Assigne.Nom, StringFormat=Assigné: {0}}" FontSize="12"/>
+                      <TextBlock Text="{Binding PhasesRestantes, StringFormat=Phases restantes: {0}}" FontSize="12"/>
+                    </StackPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </TabItem>
+          </TabControl>
+        </Grid>
+      </Border>
+
+      <!-- Journal -->
+      <Border Grid.Column="2" Padding="10" CornerRadius="10" Height="540">
+        <Grid RowDefinitions="Auto,*">
+          <TextBlock Grid.Row="0" Text="Journal" FontSize="18" Margin="0,0,0,8"/>
+
+          <ListBox Grid.Row="1"
+                   ItemsSource="{Binding Log}"
+                   ScrollViewer.VerticalScrollBarVisibility="Auto"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate>
+              <DataTemplate>
+                <TextBlock Text="{Binding}"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,6"/>
+              </DataTemplate>
+            </ListBox.ItemTemplate>
+          </ListBox>
+        </Grid>
+      </Border>
+
+    </Grid>
+  </DockPanel>
+</Window>
